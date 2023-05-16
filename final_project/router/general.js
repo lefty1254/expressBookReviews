@@ -43,7 +43,7 @@ public_users.get('/author/:author', function (req, res) {
                 filtered_books.push(book)
             }
         }
-        console.log(`filtered_books length= ${filtered_books.length}, filtered_books = ${JSON.stringify(filtered_books)}`)
+        // console.log(`filtered_books length= ${filtered_books.length}, filtered_books = ${JSON.stringify(filtered_books)}`)
         if (filtered_books.length > 0) {
             if (filtered_books.length == 1)
                 return filtered_books[0]
@@ -58,20 +58,53 @@ public_users.get('/author/:author', function (req, res) {
         res.send(JSON.stringify(author, null, 4))
     }
     else {
-        return res.status(300).json({ message: "Yet to be implemented" });
+        return res.status(300).json({ message: "Invalid author name" + req.params.author });
     }
 });
 
 // Get all books based on title
 public_users.get('/title/:title', function (req, res) {
     //Write your code here
+    const getTitle = (title) => {
+        keys = Object.keys(books)
+        console.log(keys)
+        let filtered_books = []
+        for (let key in keys) {
+            const book = books[key]
+            if (book && book.title === title) {
+                filtered_books.push(book)
+            }
+        }
+        // console.log(`filtered_books length= ${filtered_books.length}, filtered_books = ${JSON.stringify(filtered_books)}`)
+        if (filtered_books.length > 0) {
+            if (filtered_books.length == 1)
+                return filtered_books[0]
+            return filtered_books
+
+        }
+        return false;
+    }
+    const book = getTitle(req.params.title)
+    if (book) {
+
+        res.send(JSON.stringify(book, null, 4))
+    }
+    else {
+        return res.status(300).json({ message: "Invalid author name" + req.params.title });
+    }
     return res.status(300).json({ message: "Yet to be implemented" });
 });
 
 //  Get book review
 public_users.get('/review/:isbn', function (req, res) {
     //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+    const isbn = req.params.isbn
+    if (books[isbn]) {
+        res.send(books[isbn].reviews)
+    }
+    else {
+        return res.status(300).json({ message: "Yet to be implemented" });
+    }
 });
 
 module.exports.general = public_users;
